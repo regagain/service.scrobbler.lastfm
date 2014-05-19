@@ -1,6 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: Last.fm
-# Addon id: plugin.audio.lastfm
+# Addon id: service.scrobbler.lastfm
 # Addon Provider: Team-XBMC
 msgid ""
 msgstr ""
