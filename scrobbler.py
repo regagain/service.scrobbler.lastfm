@@ -41,8 +41,7 @@ class Main:
         if data:
             self.queue = data
         # start daemon
-        while (not xbmc.abortRequested):
-            xbmc.sleep(1000)
+        self.monitor.waitForAbort()
         # clear skin properties
         clear_prop('LastFM.CanLove')
         clear_prop('LastFM.CanBan')
