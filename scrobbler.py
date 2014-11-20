@@ -285,7 +285,7 @@ class MyPlayer(xbmc.Player):
             user = '0'
 
         log('song scrobbling enabled: ' + str(self.songs), SESSION)
-        log('radio scrobbling enabled: ' + str(self.songs), SESSION)
+        log('radio scrobbling enabled: ' + str(self.radio), SESSION)
         log('user flag: ' + user, SESSION)
 
         # make sure we have artist and trackname
