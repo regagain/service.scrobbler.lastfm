@@ -287,7 +287,13 @@ class MyPlayer(xbmc.Player):
         log('song scrobbling enabled: ' + str(self.songs), SESSION)
         log('radio scrobbling enabled: ' + str(self.radio), SESSION)
         log('user flag: ' + user, SESSION)
-
+        # streaming radio of provides both artistname and songtitle as one label
+        if title and not artist:
+            try:
+                artist = title.split(' - ')[0]
+                title = title.split(' - ')[1]
+            except:
+                pass
         # make sure we have artist and trackname
         if artist and title:
             # check user settings to determine if we should submit this track
