@@ -289,7 +289,7 @@ class MyPlayer(xbmc.Player):
         log('user flag: ' + user, SESSION)
 
         # make sure we have artist and trackname
-        if artist and track:
+        if artist and title:
             # check user settings to determine if we should submit this track
             if user == '1' and not self.songs:
                 # user is listening to local source, but songs setting is disabled
