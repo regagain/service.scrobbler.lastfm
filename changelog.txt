@@ -1,4 +1,5 @@
 v1.0.4
+- fixes for local path detection
 - remove old workaround
 - add more logging
 

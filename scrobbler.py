@@ -276,9 +276,10 @@ class MyPlayer(xbmc.Player):
 
         log('song scrobbling enabled: ' + str(self.songs), SESSION)
         log('radio scrobbling enabled: ' + str(self.radio), SESSION)
-        log('user flag: ' + user, SESSION)
         log('artist: ' + artist, SESSION)
         log('title: ' + title, SESSION)
+        log('path: ' + path, SESSION)
+        log('user flag: ' + user, SESSION)
         # streaming radio of provides both artistname and songtitle as one label
         if title and not artist:
             try:

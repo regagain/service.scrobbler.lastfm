@@ -6,8 +6,9 @@ def is_local(path):
     parse_result = urlparse(path)
 
     if not parse_result.netloc:
-        return True;  # assume a lack of network location implies a private address
-
+        return True  # assume a lack of network location implies a private address
+    elif parse_result.scheme == 'musicdb' or parse_result.scheme == 'smb':
+        return True  # temporary workaround
     # regex reference: http://stackoverflow.com/a/692457/577298
     elif re.match("127\.\d{1,3}\.\d{1,3}\.\d{1,3}", parse_result.netloc, flags=0):
         return True
