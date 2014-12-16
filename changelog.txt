@@ -1,3 +1,7 @@
+v1.0.4
+- remove old workaround
+- add more logging
+
 v1.0.3
 - update language files from Transifex
 - add better support for streaming radio
