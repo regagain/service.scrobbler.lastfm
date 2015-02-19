@@ -121,10 +121,10 @@ class Main:
         # scrobble track
         log('scrobbling', SESSION)
         # check the backlog
-        if len(self.queue) > 500:
+        if len(self.queue) > 250:
             # something is wrong, reset the queue
             self.queue = []
-            log('error: queue exceeded 1000 items', SESSION)
+            log('error: queue exceeded 250 items', SESSION)
             return
         # we are allowed to submit max 50 tracks in one go
         submitlist = self.queue[:50]
@@ -193,10 +193,13 @@ class Main:
             log('Last.fm returned an unknown scrobble response', SESSION)
             # unknown error. flush the queue
             self.queue = []
-        # check if there's anything left in the queue to scrobble (if we started with more than 50 tracks)
-        if self.queue:
-            log('tracks left to scrobble', SESSION)
-            self._lastfm_scrobble( tstamp )
+
+# if queue > 50 and last.fm errors, we don't decrease our queue. this causes a loop.
+#        # check if there's anything left in the queue to scrobble (if we started with more than 50 tracks)
+#        if self.queue:
+#            log('tracks left to scrobble', SESSION)
+#            self._lastfm_scrobble( tstamp )
+
         # sync queue to disk
         log('save file to disk', SESSION)
         write_file(self.file, self.queue)
