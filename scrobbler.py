@@ -110,7 +110,7 @@ class Main:
             # evaluate error response
             if code == 9:
                 # inavlid session key response, drop the key
-                log('drop session key')
+                log('drop session key', SESSION)
                 drop_sesskey()
             return
         else:
