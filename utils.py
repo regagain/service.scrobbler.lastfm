@@ -1,9 +1,6 @@
 import os, sys, time, socket, urllib, urllib2, urlparse, httplib, base64, hashlib
 import xbmc, xbmcgui, xbmcplugin, xbmcaddon, xbmcvfs
-if sys.version_info < (2, 7):
-    import simplejson
-else:
-    import json as simplejson
+import json
 
 __addon__        = xbmcaddon.Addon()
 __addonid__      = __addon__.getAddonInfo('id')
@@ -141,7 +138,7 @@ def getsig( params ):
 def jsonparse( response ):
     # parse response
     data = unicode(response, 'utf-8', errors='ignore')
-    return simplejson.loads(data)
+    return json.loads(data)
 
 def drop_sesskey():
     # drop our key, this will trigger onsettingschanged to fetch a new key

@@ -177,7 +177,7 @@ class Main:
             log('Last.fm scrobble returned failed response: %s' % msg, SESSION)
             # evaluate error response
             if code == 9:
-                # inavlid session key response, drop the new key
+                # inavlid session key response, drop the key
                 log('drop session key', SESSION)               
                 drop_sesskey()
             # flush the queue unless it's a temp error on last.fm side
@@ -268,11 +268,15 @@ class MyPlayer(xbmc.Player):
         log('title: ' + title, SESSION)
         log('path: ' + path, SESSION)
         log('user flag: ' + user, SESSION)
-        # streaming radio of provides both artistname and songtitle as one label
+        # streaming radio may provide both artistname and songtitle as one label, or we have a file with no tags
         if title and not artist:
             try:
                 artist = title.split(' - ')[0]
                 title = title.split(' - ')[1]
+                if artist[2] == '.' and title[-4] == '.':
+                   # assume file without tags %N. %A - %T.ext
+                   artist = artist[3:].strip()
+                   title = title[:-4].strip()
                 log('extracted artist: ' + artist, SESSION)
                 log('extracted title: ' + title, SESSION)
             except:
