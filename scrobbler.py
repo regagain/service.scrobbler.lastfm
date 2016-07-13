@@ -269,6 +269,8 @@ class MyPlayer(xbmc.Player):
         log('path: ' + path, SESSION)
         log('user flag: ' + user, SESSION)
         # streaming radio may provide both artistname and songtitle as one label, or we have a file with no tags
+        # NOTE - this is against the last.fm scrobbling rules:
+        # "Do not attempt to determine a track's meta data from its filename. Please only use meta data from well-structured sources such as ID3 tags."
         if title and not artist:
             try:
                 artist = title.split(' - ')[0]
