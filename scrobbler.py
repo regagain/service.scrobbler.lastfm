@@ -90,6 +90,7 @@ class Main:
         data['method'] = 'track.updateNowPlaying'
         data['album'] = tags.get('album','')
         data['artist'] = tags.get('artist','')
+        data['albumArtist'] = tags.get('albumartist','')
         data['duration'] = tags.get('duration','')
         data['mbid'] = tags.get('mbid','')
         data['track'] = tags.get('title','')
@@ -137,6 +138,7 @@ class Main:
             if (int(item.get('duration')) > 30) and ((tstamp - item.get('timestamp') > int(int(item.get('duration'))/2)) or (tstamp - int(item.get('timestamp')) > 240)):
                 data['album[%d]' % count] = item.get('album','')
                 data['artist[%d]' % count] = item.get('artist','')
+                data['albumArtist[%d]' % count] = item.get('albumartist','')
                 data['duration[%d]' % count] = item.get('duration','')
                 data['mbid[%d]' % count] = item.get('mbid','')
                 data['streamid[%d]' % count] = item.get('streamid','')
@@ -246,9 +248,10 @@ class MyPlayer(xbmc.Player):
 
     def _get_tags( self ):
         # get track tags
-        artist   = self.getMusicInfoTag().getArtist().decode("utf-8")
-        album    = self.getMusicInfoTag().getAlbum().decode("utf-8")
-        title    = self.getMusicInfoTag().getTitle().decode("utf-8")
+        artist = self.getMusicInfoTag().getArtist().decode("utf-8")
+        album = self.getMusicInfoTag().getAlbum().decode("utf-8")
+        albumartist = self.getMusicInfoTag().getAlbumArtist().decode("utf-8")
+        title = self.getMusicInfoTag().getTitle().decode("utf-8")
         duration = str(self.getMusicInfoTag().getDuration())
         # get duration from xbmc.Player if the MusicInfoTag duration is invalid
         if int(duration) <= 0:
@@ -297,7 +300,7 @@ class MyPlayer(xbmc.Player):
                 return None
             # previous clauses did not return, so we have either a local play with the songs setting enabled, or a remote play with the radio setting enabled,
             # and therefore can scrobble
-            tracktags = dict(artist=artist, album=album, title=title, duration=duration, track=track, mbid=mbid, path=path, timestamp=timestamp, streamid=streamid, user=user)
+            tracktags = dict(artist=artist, album=album, albumartist=albumartist, title=title, duration=duration, track=track, mbid=mbid, path=path, timestamp=timestamp, streamid=streamid, user=user)
             log('tracktags: %s' % tracktags, SESSION)
             return tracktags
 
