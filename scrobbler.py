@@ -303,7 +303,6 @@ class MyPlayer(xbmc.Player):
             tracktags = dict(artist=artist, album=album, albumartist=albumartist, title=title, duration=duration, track=track, mbid=mbid, path=path, timestamp=timestamp, streamid=streamid, user=user)
             log('tracktags: %s' % tracktags, SESSION)
             return tracktags
-
         else:
             log('cannot scrobble track with no artist and track information', SESSION)
             return None
