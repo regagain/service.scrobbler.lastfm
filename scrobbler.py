@@ -54,10 +54,11 @@ class Main:
         user         = settings['user']
         pwd          = settings['pwd']
         songs        = settings['songs']
+        videos       = settings['videos']
         radio        = settings['radio']
         self.sesskey = settings['sesskey']
         # init the player class (re-init when settings have changed)
-        self.player = MyPlayer(action=self._lastfm_submit, user=user, pwd=pwd, songs=songs, radio=radio, sesskey=self.sesskey)
+        self.player = MyPlayer(action=self._lastfm_submit, user=user, pwd=pwd, songs=songs, videos=videos, radio=radio, sesskey=self.sesskey)
         # init the player class (re-init when settings have changed)
         self.monitor = MyMonitor(action=self._get_settings, user=user, pwd=pwd)
 
@@ -208,6 +209,7 @@ class MyPlayer(xbmc.Player):
         self.pwd     = kwargs['pwd']
         self.sesskey = kwargs['sesskey']
         self.songs   = kwargs['songs']
+        self.videos  = kwargs['videos']
         self.radio   = kwargs['radio']
         self.Audio   = False
 

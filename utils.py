@@ -34,6 +34,7 @@ def read_settings(session, puser=False, ppwd=False):
     user      = __addon__.getSetting('lastfmuser').decode("utf-8")
     pwd       = __addon__.getSetting('lastfmpass').decode("utf-8")
     songs     = __addon__.getSetting('lastfmsubmitsongs') == 'true'
+    videos    = __addon__.getSetting('lastfmsubmitvideos') == 'true'
     radio     = __addon__.getSetting('lastfmsubmitradio') == 'true'
     confirm   = __addon__.getSetting('lastfmconfirm') == 'true'
     sesskey   = __addon__.getSetting('lastfmkey')
@@ -74,6 +75,7 @@ def read_settings(session, puser=False, ppwd=False):
     settings['user']    = user
     settings['pwd']     = pwd
     settings['songs']   = songs
+    settings['videos']  = videos
     settings['radio']   = radio
     settings['confirm'] = confirm
     settings['sesskey'] = sesskey

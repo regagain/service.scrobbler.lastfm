@@ -40,7 +40,11 @@ msgctxt "#30005"
 msgid "Confirm Love/Ban submissions"
 msgstr ""
 
-#empty strings from id 30006 to 32010
+msgctxt "#30006"
+msgid "Submit music videos to Last.fm"
+msgstr ""
+
+#empty strings from id 30007 to 32010
 
 msgctxt "#32011"
 msgid "Last.fm"
