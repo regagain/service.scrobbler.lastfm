@@ -1,42 +1,51 @@
-import os, sys, time, socket, urllib, urllib2, urlparse, httplib, base64, hashlib
-import xbmc, xbmcgui, xbmcplugin, xbmcaddon, xbmcvfs
+import os
+import sys
+import time
+import socket
+import urllib.request
+import urllib.parse
+import base64
+import hashlib
+import xbmc
+import xbmcgui
+import xbmcplugin
+import xbmcaddon
+import xbmcvfs
 import json
 
-__addon__        = xbmcaddon.Addon()
-__addonid__      = __addon__.getAddonInfo('id')
+ADDON = xbmcaddon.Addon()
+ADDONID = ADDON.getAddonInfo('id')
 
-APIURL       = 'http://ws.audioscrobbler.com/2.0/'
-AUTHURL      = 'https://ws.audioscrobbler.com/2.0/'
-HEADERS      = {'User-Agent': 'Kodi Media center', 'Accept-Charset': 'utf-8'}
-LANGUAGE     = __addon__.getLocalizedString
-ADDONVERSION = __addon__.getAddonInfo('version')
-CWD          = __addon__.getAddonInfo('path').decode("utf-8")
-STATUS       = __addon__.getSetting('lastfmstatus')
-DATAPATH     = xbmc.translatePath(xbmcaddon.Addon().getAddonInfo('profile')).decode('utf-8')
-WINDOW       = xbmcgui.Window(10000)
+APIURL = 'http://ws.audioscrobbler.com/2.0/'
+AUTHURL = 'https://ws.audioscrobbler.com/2.0/'
+HEADERS = {'User-Agent': 'Kodi Media center', 'Accept-Charset': 'utf-8'}
+LANGUAGE = ADDON.getLocalizedString
+ADDONVERSION = ADDON.getAddonInfo('version')
+CWD = ADDON.getAddonInfo('path')
+STATUS = ADDON.getSetting('lastfmstatus')
+DATAPATH = xbmc.translatePath(ADDON.getAddonInfo('profile'))
+WINDOW = xbmcgui.Window(10000)
 
 socket.setdefaulttimeout(10)
 
 def log(txt, session):
-    if isinstance (txt,str):
-        txt = txt.decode("utf-8")
-    message = u'%s - %s: %s' % (__addonid__, session, txt)
-    xbmc.log(msg=message.encode("utf-8"), level=xbmc.LOGDEBUG)
+    message = '%s - %s: %s' % (ADDONID, session, txt)
+    xbmc.log(msg=message, level=xbmc.LOGDEBUG)
 
 def parse_argv():
     # parse argv
-    params = dict( arg.split( "=" ) for arg in sys.argv[ 1 ].split( "&" ) )
+    params = dict(arg.split( "=" ) for arg in sys.argv[ 1 ].split( "&" ))
     return True, params
 
 def read_settings(session, puser=False, ppwd=False):
     # read settings
     settings = {}
-    user      = __addon__.getSetting('lastfmuser').decode("utf-8")
-    pwd       = __addon__.getSetting('lastfmpass').decode("utf-8")
-    songs     = __addon__.getSetting('lastfmsubmitsongs') == 'true'
-    radio     = __addon__.getSetting('lastfmsubmitradio') == 'true'
-    confirm   = __addon__.getSetting('lastfmconfirm') == 'true'
-    sesskey   = __addon__.getSetting('lastfmkey')
+    user = ADDON.getSetting('lastfmuser')
+    pwd = ADDON.getSetting('lastfmpass')
+    songs = ADDON.getSetting('lastfmsubmitsongs') == 'true'
+    radio = ADDON.getSetting('lastfmsubmitradio') == 'true'
+    confirm = ADDON.getSetting('lastfmconfirm') == 'true'
+    sesskey = ADDON.getSetting('lastfmkey')
     # if puser or ppwd is true, we were called by onSettingsChanged
     if puser or ppwd:
         # check if user has changed it's username or password
@@ -67,7 +76,7 @@ def read_settings(session, puser=False, ppwd=False):
             log('Last.fm an unknown authentication response', session)
             sesskey = ''
         if sesskey:
-            __addon__.setSetting('lastfmkey', sesskey)
+            ADDON.setSetting('lastfmkey', sesskey)
     elif not (user and pwd):
         # no username or password
         xbmc.executebuiltin('Notification(%s,%s,%i)' % (LANGUAGE(32011), LANGUAGE(32027), 7000))
@@ -91,7 +100,7 @@ def clear_prop(key):
     val = WINDOW.clearProperty(key)
     return val
 
-def read_file( item ):
+def read_file(item):
     # read the queue file if we have one
     path = os.path.join(DATAPATH, item)
     if xbmcvfs.exists( path ):
@@ -104,7 +113,7 @@ def read_file( item ):
     else:
         return None
 
-def write_file( item, data ):
+def write_file(item, data):
     # create the data dir if needed
     if not xbmcvfs.exists( DATAPATH ):
         xbmcvfs.mkdir( DATAPATH )
@@ -117,38 +126,36 @@ def write_file( item, data ):
 def md5sum(txt):
     # generate a md5 hash
     if isinstance (txt,str):
-        txt = txt.decode("utf-8")
+        txt = txt
     md5hash = hashlib.md5()
     md5hash.update(txt.encode("utf-8"))
     return md5hash.hexdigest()
 
-def getsig( params ):
-    app = base64.b64decode(STATUS)[::-1]
+def getsig(params):
+    app = base64.b64decode(STATUS)[::-1].decode("utf-8")
     params['api_key'] = ''.join([app[48:64], app[16:32]])
     # dict to list
-    siglist = params.items()
     # signature params need to be sorted
-    siglist.sort()
+    siglist = sorted(params.items())
     # create signature string
     sigstring = ''.join(map(''.join,siglist))
     # add api secret and create a request signature
     sig = md5sum(sigstring + ''.join([app[32:48], app[0:16]]))
     return sig
 
-def jsonparse( response ):
+def jsonparse(response):
     # parse response
-    data = unicode(response, 'utf-8', errors='ignore')
-    return json.loads(data)
+    return json.loads(response)
 
 def drop_sesskey():
     # drop our key, this will trigger onsettingschanged to fetch a new key
-    __addon__.setSetting('lastfmkey', '')
+    ADDON.setSetting('lastfmkey', '')
 
 class LastFM:
-    def __init__( self ):
+    def __init__(self):
         pass
 
-    def post( self, params, session, auth=False ):
+    def post(self, params, session, auth=False):
         # create a signature
         apisig = getsig(params)
         # add response format
@@ -162,27 +169,27 @@ class LastFM:
             baseurl = APIURL
         # encode the data
         str_params = {}
-        for k, v in params.iteritems():
-            str_params[k] = unicode(v).encode('utf-8')
-        data = urllib.urlencode(str_params)
+        for k, v in params.items():
+            str_params[k] = v.encode('utf-8')
+        data = urllib.parse.urlencode(str_params)
         # prepare post data
-        url = urllib2.Request(baseurl, data, HEADERS)
+        url = urllib.request.Request(baseurl, data, HEADERS)
         return self.connect(url, session)
 
-    def get( self, params, session ):
+    def get(self, params, session):
         app = base64.b64decode(STATUS)[::-1]
         # create request url
         url = APIURL + '?method=' + params[0] + '&' + params[2] + '=' + params[1].replace(' ', '%20') + '&api_key=' + ''.join([app[48:64], app[16:32]]) + '&format=json'
         log('list url %s' % url, session)
         return self.connect(url, session)
 
-    def connect( self, url, session ):
+    def connect(self, url, session):
         # connect to last.fm
         try:
-            req = urllib2.urlopen(url)
+            req = urllib.request.urlopen(url)
             result = req.read()
             req.close()
-        except urllib2.HTTPError, err:
+        except urllib.request.HTTPError as err:
             if err.code == 403:
                 result = '{"error":9, "message":"updating session key"}'
         except:

@@ -248,10 +248,10 @@ class MyPlayer(xbmc.Player):
 
     def _get_tags( self ):
         # get track tags
-        artist = self.getMusicInfoTag().getArtist().decode("utf-8")
-        album = self.getMusicInfoTag().getAlbum().decode("utf-8")
-        albumartist = self.getMusicInfoTag().getAlbumArtist().decode("utf-8")
-        title = self.getMusicInfoTag().getTitle().decode("utf-8")
+        artist = self.getMusicInfoTag().getArtist()
+        album = self.getMusicInfoTag().getAlbum()
+        albumartist = self.getMusicInfoTag().getAlbumArtist()
+        title = self.getMusicInfoTag().getTitle()
         duration = str(self.getMusicInfoTag().getDuration())
         # get duration from xbmc.Player if the MusicInfoTag duration is invalid
         if int(duration) <= 0:
@@ -259,7 +259,7 @@ class MyPlayer(xbmc.Player):
         track    = str(self.getMusicInfoTag().getTrack())
         mbid     = '' # musicbrainz id is not yet available
         streamid = '' # deprecated
-        path      = self.getPlayingFile().decode("utf-8")
+        path      = self.getPlayingFile()
         timestamp = int(time.time())
         if is_local(path):
             user = '1'

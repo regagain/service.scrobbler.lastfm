@@ -1,9 +1,9 @@
-from urlparse import urlparse
+import urllib.parse
 import re
 
 def is_local(path):
     """ Returns True if the given path is a local address, otherwise False. """
-    parse_result = urlparse(path)
+    parse_result = urllib.parse.urlparse(path)
     # only analyze http(s)/rtmp streams
     if (not parse_result.scheme == 'http') and (not parse_result.scheme == 'https') and (not parse_result.scheme == 'rtmp'):
         return True

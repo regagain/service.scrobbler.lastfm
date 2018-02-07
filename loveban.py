@@ -19,8 +19,8 @@ SESSION = 'loveban'
 
 class LoveBan:
     def __init__( self, params ):
-        artist = xbmc.getInfoLabel('MusicPlayer.Artist').decode("utf-8")
-        song   = xbmc.getInfoLabel('MusicPlayer.Title').decode("utf-8")
+        artist = xbmc.getInfoLabel('MusicPlayer.Artist')
+        song   = xbmc.getInfoLabel('MusicPlayer.Title')
         action = params.get( 'action' )
         # check if the skin provided valid params
         if artist and song and (action == 'LastFM.Love' or action == 'LastFM.Ban'):
