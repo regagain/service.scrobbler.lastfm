@@ -62,12 +62,12 @@ def read_settings(session, puser=False, ppwd=False):
         response = lastfm.post(data, session, True)
         if not response:
             sesskey = ''
-        elif response.has_key('session'):
+        elif 'session' in response:
             sesskey = response['session']['key']
             # set property for skins
             set_prop('LastFM.CanLove', 'True')
             set_prop('LastFM.CanBan', 'True')
-        elif response.has_key('error'):
+        elif 'error' in response:
             msg  = response['message'] 
             xbmc.executebuiltin('Notification(%s,%s,%i)' % (LANGUAGE(32011), msg, 7000))
             log('Last.fm returned failed response: %s' % msg, session)
@@ -80,10 +80,10 @@ def read_settings(session, puser=False, ppwd=False):
     elif not (user and pwd):
         # no username or password
         xbmc.executebuiltin('Notification(%s,%s,%i)' % (LANGUAGE(32011), LANGUAGE(32027), 7000))
-    settings['user']    = user
-    settings['pwd']     = pwd
-    settings['songs']   = songs
-    settings['radio']   = radio
+    settings['user'] = user
+    settings['pwd'] = pwd
+    settings['songs'] = songs
+    settings['radio'] = radio
     settings['confirm'] = confirm
     settings['sesskey'] = sesskey
     if sesskey:
@@ -171,7 +171,7 @@ class LastFM:
         str_params = {}
         for k, v in params.items():
             str_params[k] = v.encode('utf-8')
-        data = urllib.parse.urlencode(str_params)
+        data = urllib.parse.urlencode(str_params).encode("utf-8")
         # prepare post data
         url = urllib.request.Request(baseurl, data, HEADERS)
         return self.connect(url, session)

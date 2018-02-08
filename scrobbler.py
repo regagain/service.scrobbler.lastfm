@@ -101,9 +101,9 @@ class Main:
         if not result:
             return
         # parse response
-        if result.has_key('nowplaying'):
+        if 'nowplaying' in result:
             return
-        elif result.has_key('error'):
+        elif 'error' in result:
             code = result['error']
             msg = result['message'] 
             xbmc.executebuiltin('Notification(%s,%s,%i)' % (LANGUAGE(32011), msg, 7000))
@@ -169,10 +169,10 @@ class Main:
             write_file(self.file, self.queue)
             return
         # parse response
-        if result.has_key('scrobbles'):
+        if 'scrobbles' in result:
             # remove submitted items from the list
             self.queue = self.queue[50:]
-        elif result.has_key('error'):
+        elif 'error' in result:
             code = result['error']
             msg = result['message'] 
             xbmc.executebuiltin('Notification(%s,%s,%i)' % (LANGUAGE(32011), msg, 7000))
@@ -203,13 +203,13 @@ class MyPlayer(xbmc.Player):
     def __init__( self, *args, **kwargs ):
         xbmc.Player.__init__( self )
         log('init player class', SESSION)
-        self.action  = kwargs['action']
-        self.user    = kwargs['user']
-        self.pwd     = kwargs['pwd']
+        self.action = kwargs['action']
+        self.user = kwargs['user']
+        self.pwd = kwargs['pwd']
         self.sesskey = kwargs['sesskey']
-        self.songs   = kwargs['songs']
-        self.radio   = kwargs['radio']
-        self.Audio   = False
+        self.songs = kwargs['songs']
+        self.radio = kwargs['radio']
+        self.Audio = False
 
     def onPlayBackStarted( self ):
         # only do something if we're playing audio and user has enabled it in settings
@@ -311,8 +311,8 @@ class MyMonitor(xbmc.Monitor):
     def __init__( self, *args, **kwargs ):
         xbmc.Monitor.__init__( self )
         log('init monitor class', SESSION)
-        self.user   = kwargs['user']
-        self.pwd    = kwargs['pwd']
+        self.user = kwargs['user']
+        self.pwd = kwargs['pwd']
         self.action = kwargs['action']
 
     def onSettingsChanged( self ):
