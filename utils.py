@@ -171,7 +171,7 @@ class LastFM:
         str_params = {}
         for k, v in params.items():
             str_params[k] = v.encode('utf-8')
-        data = urllib.parse.urlencode(str_params).encode("utf-8")
+        data = urllib.parse.urlencode(str_params).encode('utf-8')
         # prepare post data
         url = urllib.request.Request(baseurl, data, HEADERS)
         return self.connect(url, session)
