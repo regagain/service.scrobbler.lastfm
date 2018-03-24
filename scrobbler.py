@@ -310,6 +310,9 @@ class MyPlayer(xbmc.Player):
             log('cannot scrobble track with no artist and track information', SESSION)
             return None
 
+    def isPlayingMusicVideo( self ):
+        return self.isPlayingVideo() and self.getVideoInfoTag().getMediaType() == 'musicvideo'
+
 class MyMonitor(xbmc.Monitor):
     def __init__( self, *args, **kwargs ):
         xbmc.Monitor.__init__( self )
