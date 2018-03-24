@@ -250,10 +250,16 @@ class MyPlayer(xbmc.Player):
 
     def _get_tags( self ):
         # get track tags
-        tags = self.getMusicInfoTag()
-        artist = tags.getArtist().decode("utf-8")
+        if self.isPlayingAudio():
+            tags = self.getMusicInfoTag()
+            artist = tags.getArtist().decode("utf-8")
+            albumartist = tags.getAlbumArtist().decode("utf-8")
+        elif self.isPlayingVideo():
+            tags = self.getVideoInfoTag()
+            artist = tags.getArtist()[0].decode("utf-8")
+            albumartist = ""  # not available for music videos.
+
         album = tags.getAlbum().decode("utf-8")
-        albumartist = tags.getAlbumArtist().decode("utf-8")
         title = tags.getTitle().decode("utf-8")
         duration = str(tags.getDuration())
         # get duration from xbmc.Player if the MusicInfoTag duration is invalid
