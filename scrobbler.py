@@ -277,6 +277,7 @@ class MyPlayer(xbmc.Player):
         else:
             user = '0'
         log('song scrobbling enabled: ' + str(self.songs), SESSION)
+        log('video scrobbling enabled: ' + str(self.videos), SESSION)
         log('radio scrobbling enabled: ' + str(self.radio), SESSION)
         log('artist: ' + artist, SESSION)
         log('title: ' + title, SESSION)
@@ -308,6 +309,10 @@ class MyPlayer(xbmc.Player):
             elif user == '0' and not self.radio:
                 # user is listening to remote source, but the radio setting is disabled
                 log('user settings prohibit us from scrobbling online streaming radio', SESSION)
+                return None
+            elif self.isPlayingMusicVideo() and not self.videos:
+                # user is watching a music video, but the music video setting is disabled
+                log('user settings prohibit us from scrobbling music videos', SESSION)
                 return None
             # previous clauses did not return, so we have either a local play with the songs setting enabled, or a remote play with the radio setting enabled,
             # and therefore can scrobble
