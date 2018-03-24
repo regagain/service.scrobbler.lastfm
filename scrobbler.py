@@ -215,20 +215,22 @@ class MyPlayer(xbmc.Player):
 
     def onPlayBackStarted( self ):
         # only do something if we're playing audio and user has enabled it in settings
-        if self.isPlayingAudio() and self.sesskey and self.user and self.pwd and (self.radio or self.songs):
-            # we need to keep track of this bool for stopped/ended notifications
-            self.Audio = True
-            log('onPlayBackStarted', SESSION)
-            # tags are not available instantly and we don't what to announce right away as the user might be skipping through the songs
-            xbmc.sleep(500)
-            # don't announce if the user already skipped to the next track or stopped playing audio
-            if self.isPlayingAudio():
-                # get tags
-                tags = self._get_tags()
-                # check if we have anything to submit
-                if tags:
-                    # announce song
-                     self.action(tags)
+
+        if self.sesskey and self.user and self.pwd:
+            if (self.isPlayingAudio() and (self.radio or self.songs)) or (self.isPlayingMusicVideo() and self.videos):
+                # we need to keep track of this bool for stopped/ended notifications
+                self.Audio = True
+                log('onPlayBackStarted', SESSION)
+                # tags are not available instantly and we don't what to announce right away as the user might be skipping through the songs
+                xbmc.sleep(500)
+                # don't announce if the user already skipped to the next track or stopped playing audio
+                if self.isPlayingAudio() or self.isPlayingMusicVideo():
+                    # get tags
+                    tags = self._get_tags()
+                    # check if we have anything to submit
+                    if tags:
+                        # announce song
+                         self.action(tags)
 
     def onPlayBackEnded( self ):
         # ignore onPlayBackEnded notifications from the video player
